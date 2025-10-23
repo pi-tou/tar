@@ -1,0 +1,967 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demontage Remontage</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #34495e;
+            background: linear-gradient(to right, #e8f5e9, #fff);
+            padding: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #4caf50;
+            border-radius: 5px;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-menu li {
+            text-transform: lowercase;
+
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-menu li a:hover {
+            color: #3498db;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .critical-box {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .survival-box {
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .checklist-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border-left: 4px solid #e0e0e0;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left-color: #3498db;
+        }
+
+        .checklist-item.priority-high {
+            border-left-color: #e74c3c;
+            background: #fee;
+        }
+
+        .checklist-item.priority-medium {
+            border-left-color: #f39c12;
+            background: #fffbf0;
+        }
+
+        .checklist-item.priority-low {
+            border-left-color: #95a5a6;
+        }
+
+        input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .item-info {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-urgent {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge-fragile {
+            background: #e67e22;
+            color: white;
+        }
+
+        .badge-heavy {
+            background: #34495e;
+            color: white;
+        }
+
+        .badge-tools {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .badge-voyage {
+            background: #3498db;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .truck-info {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .truck-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .spec-card {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .spec-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .spec-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .progress-container {
+            background: #ecf0f1;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            height: 30px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: absolute;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: #2c3e50;
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .truck-specs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <div class="logo">TaR25</div>
+        <ul class="nav-menu">
+            <li><a href="/tar/">Accueil</a></li>
+            <li><a href="/tar/checklist">INVENTAIRE MOBILIER</a></li>
+            <li><a href="/tar/survivalkit">KIT DE SURVIE</a></li>
+            <li><a href="/tar/camion">CAMION</a></li>
+            <li><a href="/tar/demontage">DÉMONTAGE/REMONTAGE</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+<button type="reset" onclick="resetForm()"> Reset</button>
+
+<div id="formlist">
+
+    <h1 id="-guide-démontageremontage-des-meubles">🔧 GUIDE DÉMONTAGE/REMONTAGE DES MEUBLES</h1>
+<p><strong>Temps total estimé : 15-20 heures</strong> | <strong>Personnes nécessaires : 2 minimum pour gros meubles</strong></p>
+
+<hr />
+
+<h2 id="️-préparation-avant-démontage">⚠️ PRÉPARATION AVANT DÉMONTAGE</h2>
+
+<h3 id="matériel-à-préparer">Matériel à préparer</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Appareil photo/smartphone chargé</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachets zip (30 minimum)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Marqueur permanent</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Scotch papier pour étiquetage</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Couvertures protection sol</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Boîtes pour petites pièces</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Notices meubles (imprimer si besoin)</li>
+</ul>
+
+<h3 id="organisation-espace">Organisation espace</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Zone démontage dégagée</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Zone stockage pièces démontées</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Protection sol avec cartons</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Éclairage suffisant</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Accès outils facile</li>
+</ul>
+
+<hr />
+
+<h2 id="️-mezzanine-adulte-220220-cm">🛏️ MEZZANINE ADULTE 220×220 cm</h2>
+
+<h3 id="démontage-2h---2-personnes-obligatoire">DÉMONTAGE (2h - 2 personnes OBLIGATOIRE)</h3>
+<p><strong>Outils : Clé Allen 6mm, Clé 13, Tournevis</strong></p>
+
+<h4 id="phase-1---préparation-20min">Phase 1 - Préparation (20min)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photos générales 4 faces</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer matelas</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer lattes sommier</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photos détails assemblages</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Numéroter poutres au crayon (P1, P2…)</li>
+</ul>
+
+<h4 id="phase-2---démontage-structure-haute-40min">Phase 2 - Démontage structure haute (40min)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Personne 1</strong> : Maintient structure</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Personne 2</strong> : Dévisse</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer barrières sécurité
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vis dans sachet “MZ-BARR”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter cadre sommier
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vis dans sachet “MZ-SOMM”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Séparer traverses longues
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vis dans sachet “MZ-TRAV”</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="phase-3---démontage-pieds-40min">Phase 3 - Démontage pieds (40min)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dévisser pieds un par un</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>ATTENTION</strong> : Soutenir structure !</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pieds dans sachet “MZ-PIEDS”</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter échelle/escalier
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vis dans sachet “MZ-ECH”</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="phase-4---finalisation-20min">Phase 4 - Finalisation (20min)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regrouper poutres par taille</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique autour poutres</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Scotcher sachets vis sur pièce principale</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Compter toutes les pièces</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photo inventaire final</li>
+</ul>
+
+<h3 id="remontage-3h---2-personnes">REMONTAGE (3h - 2 personnes)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Installer pieds niveau sol</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monter structure base</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Vérifier niveau</strong> à chaque étape</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Assembler cadre sommier</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fixer barrières sécurité</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Installer échelle</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test solidité avant matelas</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Point sécurité</strong> : Resserrer après 1 semaine</li>
+</ul>
+
+<p><strong>⚠️ SÉCURITÉ : Ne jamais monter seul - Risque de chute structure</strong></p>
+
+<hr />
+
+<h2 id="️-lit-kura-mezzanine-ikea">🛏️ LIT KURA MEZZANINE IKEA</h2>
+
+<h3 id="démontage-1h---1-personne-possible">DÉMONTAGE (1h - 1 personne possible)</h3>
+<p><strong>Outils : Clés Allen IKEA, Tournevis cruciforme</strong></p>
+
+<h4 id="étapes-démontage-60min">Étapes démontage (60min)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photos position actuelle (haute/basse)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer matelas + lattes
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Compter lattes : <strong><em>/</em></strong></li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dévisser barrières latérales
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KURA-BARR”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter structure lit
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KURA-LIT”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Séparer montants verticaux
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KURA-MONT”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter panneaux déco (si présents)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KURA-DECO”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Conserver notice IKEA</strong></li>
+</ul>
+
+<h3 id="remontage-1h30">REMONTAGE (1h30)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Suivre notice IKEA page par page</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Option position : ☐ Haute ☐ Basse</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Montants verticaux d’abord</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cadre lit</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Barrières sécurité</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vérifier tous points vissage</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Installer lattes (ordre spécifique)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test solidité avant enfant</li>
+</ul>
+
+<p><strong>💡 Astuce : Position basse pour enfant 3 ans, haute vers 6 ans</strong></p>
+
+<hr />
+
+<h2 id="-kallax-16-cubes-14714739-cm">📚 KALLAX 16 CUBES (147×147×39 cm)</h2>
+
+<h3 id="démontage-30min">DÉMONTAGE (30min)</h3>
+<p><strong>Outils : Tournevis cruciforme, Marteau caoutchouc</strong></p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer tous objets/paniers</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photos face avant organisation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer panneau arrière (clous)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Attention</strong> : Fragile !</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dévisser étagères horizontales
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KAL16-H”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dévisser étagères verticales
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KAL16-V”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Séparer cadre extérieur
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KAL16-CADRE”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Emballer panneau arrière (fragile)</li>
+</ul>
+
+<h3 id="remontage-45min">REMONTAGE (45min)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sol parfaitement plat requis</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Assembler cadre extérieur</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Insérer divisions verticales</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Insérer divisions horizontales</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Équerre</strong> pour vérifier angles droits</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clouer panneau arrière</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fixer au mur (anti-bascule)</li>
+</ul>
+
+<p><strong>⚠️ ATTENTION : Très lourd une fois monté - 2 personnes pour déplacer</strong></p>
+
+<hr />
+
+<h2 id="-kallax-12-cubes-14711239-cm">📚 KALLAX 12 CUBES (147×112×39 cm)</h2>
+
+<h3 id="démontage-optionnel-25min">DÉMONTAGE OPTIONNEL (25min)</h3>
+<p><strong>Peut rester monté si place camionnette</strong></p>
+
+<p>Si démontage nécessaire :</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Même procédure que 16 cubes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KAL12-H” horizontales</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KAL12-V” verticales</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KAL12-CADRE”</li>
+</ul>
+
+<h3 id="transport-monté">Transport monté</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique intégral</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Couvertures protection angles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Position couchée dans camionnette</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sangles arrimage obligatoires</li>
+</ul>
+
+<hr />
+
+<h2 id="-armoire-kleppstad-17611855-cm">👕 ARMOIRE KLEPPSTAD (176×118×55 cm)</h2>
+
+<h3 id="démontage-45min">DÉMONTAGE (45min)</h3>
+<p><strong>Outils : Tournevis, Clé Allen</strong></p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vider complètement</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer portes
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Numéroter</strong> gauche/droite</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KLEP-PORTES”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retirer tringles/étagères
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “KLEP-INT”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Si miroir : <strong>PROTECTION MAXIMALE</strong>
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Papier bulle + carton</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Marquage “FRAGILE”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter structure
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Panneaux latéraux</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Haut/bas</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fond</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regrouper panneaux similaires</li>
+</ul>
+
+<h3 id="remontage-1h">REMONTAGE (1h)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Base niveau impératif</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Assembler caisson principal</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Installer fond (renfort structure)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tringles et supports étagères</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ajuster portes (charnières)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Réglage fin portes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fixer anti-bascule mur</li>
+</ul>
+
+<hr />
+
+<h2 id="-table-marbre-ovale-7212060-cm">🪑 TABLE MARBRE OVALE (72×120×60 cm)</h2>
+
+<h3 id="démontage-10min">DÉMONTAGE (10min)</h3>
+<p><strong>⚠️ FRAGILE - 2 personnes</strong></p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photos système fixation pieds</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retourner table sur couvertures</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dévisser 4 pieds
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachet “TABLE-PIEDS”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>PROTECTION PLATEAU</strong> :
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Papier bulle 3 couches</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton dur dessus/dessous</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Marquage “FRAGILE - MARBRE”</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Transport vertical si possible</li>
+</ul>
+
+<h3 id="remontage-10min">REMONTAGE (10min)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vérifier état plateau</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Table retournée sur protection</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Visser pieds dans ordre (opposés)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Retourner avec précaution</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ajuster pieds si bancal</li>
+</ul>
+
+<hr />
+
+<h2 id="-organisation-sachets-vis">📋 ORGANISATION SACHETS VIS</h2>
+
+<h3 id="système-codage">Système codage</h3>
+<p><strong>Format : [MEUBLE]-[PARTIE]-[NUMÉRO]</strong></p>
+
+<p>Exemple : MZ-BARR-01 = Mezzanine - Barrières - Sachet 1</p>
+
+<h3 id="par-meuble">Par meuble</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>MEZZANINE</strong> : MZ-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>KURA</strong> : KURA-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>KALLAX 16</strong> : KAL16-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>KALLAX 12</strong> : KAL12-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>KLEPPSTAD</strong> : KLEP-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>TABLE</strong> : TABLE-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>BUREAU</strong> : BUR-___</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>SMÅSTAD</strong> : SMA-___</li>
+</ul>
+
+<h3 id="stockage-sachets">Stockage sachets</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />1 boîte par meuble</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Étiquette extérieure visible</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Scotcher sur pièce principale</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photo contenu avant fermeture</li>
+</ul>
+
+<hr />
+
+<h2 id="️-planning-optimal-démontage">⏱️ PLANNING OPTIMAL DÉMONTAGE</h2>
+
+<h3 id="j-2-2h-le-soir">J-2 (2h le soir)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter Kallax chambre adulte</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Démonter bureau (pieds seulement)</li>
+</ul>
+
+<h3 id="j-1-4h-après-midi">J-1 (4h après-midi)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />14h-16h : Mezzanine adulte</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />16h-17h : Lit Kura</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />17h-18h : Armoire KLEPPSTAD</li>
+</ul>
+
+<h3 id="jour-j-1h-matin">Jour J (1h matin)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Finalisation petits meubles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Table (pieds)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vérification complète</li>
+</ul>
+
+<hr />
+
+<h2 id="-check-list-sécurité">✅ CHECK-LIST SÉCURITÉ</h2>
+
+<h3 id="avant-démontage">Avant démontage</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dégager zone travail</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Éclairage suffisant</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Outils en état</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Protection sol</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Aide disponible pour gros meubles</li>
+</ul>
+
+<h3 id="pendant-démontage">Pendant démontage</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photos à chaque étape</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vis immédiatement en sachets</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Numérotation continue</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pause toutes les heures</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Hydratation régulière</li>
+</ul>
+
+<h3 id="après-remontage">Après remontage</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Resserrage tous points</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test solidité</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Fixations murales</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Anti-bascule installés</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Resserrage J+7 obligatoire</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="-notes-techniques">📝 NOTES TECHNIQUES</h2>
+
+<p><strong>Couple serrage recommandé :</strong></p>
+<ul>
+  <li>Bois/Bois : Serré mais pas forcé</li>
+  <li>Métal/Bois : Ferme + 1/4 tour</li>
+  <li>Métal/Métal : Ferme + 1/2 tour</li>
+</ul>
+
+<p><strong>Ordre remontage général :</strong></p>
+<ol>
+  <li>Base/pieds</li>
+  <li>Structure verticale</li>
+  <li>Structure horizontale</li>
+  <li>Renforts/traverses</li>
+  <li>Finitions/portes</li>
+  <li>Sécurités/anti-bascule</li>
+</ol>
+
+<hr />
+
+<p><strong>Signature responsable démontage</strong> : <strong>__</strong><strong>__</strong>_</p>
+
+<p><strong>Signature responsable remontage</strong> : <strong>__</strong><strong>__</strong>_</p>
+
+<p><strong>Date</strong> : <strong>__</strong>_____</p>
+
+</div>
+<script>
+    // navigation
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Fermer le menu lors du clic sur un lien
+    document.querySelectorAll('.nav-menu li a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // checkbox
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.task-list-item input[type="checkbox"]');
+
+        checkboxes.forEach(function (checkbox, index) {
+            // Remove disabled attribute
+            checkbox.removeAttribute('disabled');
+
+            // Create unique key based on page path and index
+            const pageKey = window.location.pathname;
+            const storageKey = `${pageKey}-checkbox-${index}`;
+
+            // Restore state from localStorage
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+
+            // Save state on change
+            checkbox.addEventListener('change', function () {
+                localStorage.setItem(storageKey, this.checked);
+            });
+        });
+    });
+
+
+    // Fonction pour calculer et afficher la progression
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+        const percentage = Math.round((checked.length / checkboxes.length) * 100);
+
+        // Créer ou mettre à jour la barre de progression
+        let progressBar = document.getElementById('main-progress');
+        if (!progressBar) {
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            progressContainer.style.position = 'fixed';
+            progressContainer.style.top = '10px';
+            progressContainer.style.right = '10px';
+            progressContainer.style.width = '200px';
+            progressContainer.style.zIndex = '1000';
+            progressContainer.innerHTML = '<div id="main-progress" class="progress-bar">0%</div>';
+            document.body.appendChild(progressContainer);
+            progressBar = document.getElementById('main-progress');
+        }
+
+        progressBar.style.width = percentage + '%';
+        progressBar.textContent = percentage + '%';
+
+        // Sauvegarder en localStorage
+        localStorage.setItem('moving-progress', JSON.stringify({
+            checked: Array.from(checked).map(cb => cb.closest('.checklist-item')?.querySelector('.item-name')?.textContent),
+            percentage: percentage
+        }));
+    }
+
+    // Ajouter l'événement à toutes les checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateProgress);
+    });
+
+    // Restaurer l'état précédent si existant
+    const savedProgress = localStorage.getItem('moving-progress');
+    if (savedProgress) {
+        const data = JSON.parse(savedProgress);
+        // Restauration simple - pourrait être améliorée
+        console.log(`Progression sauvegardée : ${data.percentage}%`);
+    }
+
+    function resetForm() {
+        document.getElementById('formlist').reset();
+    }
+
+    // Initialiser la progression
+    updateProgress();
+</script>
+</body>
+</html>

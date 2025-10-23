@@ -1,0 +1,994 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camion</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #34495e;
+            background: linear-gradient(to right, #e8f5e9, #fff);
+            padding: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #4caf50;
+            border-radius: 5px;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-menu li {
+            text-transform: lowercase;
+
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-menu li a:hover {
+            color: #3498db;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .critical-box {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .survival-box {
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .checklist-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border-left: 4px solid #e0e0e0;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left-color: #3498db;
+        }
+
+        .checklist-item.priority-high {
+            border-left-color: #e74c3c;
+            background: #fee;
+        }
+
+        .checklist-item.priority-medium {
+            border-left-color: #f39c12;
+            background: #fffbf0;
+        }
+
+        .checklist-item.priority-low {
+            border-left-color: #95a5a6;
+        }
+
+        input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .item-info {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-urgent {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge-fragile {
+            background: #e67e22;
+            color: white;
+        }
+
+        .badge-heavy {
+            background: #34495e;
+            color: white;
+        }
+
+        .badge-tools {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .badge-voyage {
+            background: #3498db;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .truck-info {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .truck-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .spec-card {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .spec-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .spec-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .progress-container {
+            background: #ecf0f1;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            height: 30px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: absolute;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: #2c3e50;
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .truck-specs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <div class="logo">TaR25</div>
+        <ul class="nav-menu">
+            <li><a href="/tar/">Accueil</a></li>
+            <li><a href="/tar/checklist">INVENTAIRE MOBILIER</a></li>
+            <li><a href="/tar/survivalkit">KIT DE SURVIE</a></li>
+            <li><a href="/tar/camion">CAMION</a></li>
+            <li><a href="/tar/demontage">DÉMONTAGE/REMONTAGE</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+<button type="reset" onclick="resetForm()"> Reset</button>
+
+<div id="formlist">
+
+    <h1 id="-plan-de-chargement-camionnette-type-trafic">🚐 PLAN DE CHARGEMENT CAMIONNETTE TYPE TRAFIC</h1>
+<p><strong>Capacité : 11-12 m³</strong> | <strong>Dimensions utiles : L 3.0-3.2m × l 1.6-1.7m × H 1.9m</strong></p>
+
+<hr />
+
+<h2 id="-répartition-optimale-des-voyages">📊 RÉPARTITION OPTIMALE DES VOYAGES</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Voyage</th>
+      <th>Volume estimé</th>
+      <th>Priorité</th>
+      <th>Timing optimal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>VOYAGE 1</strong></td>
+      <td>8-9 m³</td>
+      <td>URGENT</td>
+      <td>Jour J - 8h30</td>
+    </tr>
+    <tr>
+      <td><strong>VOYAGE 2</strong></td>
+      <td>10-11 m³</td>
+      <td>IMPORTANT</td>
+      <td>Jour J - 14h</td>
+    </tr>
+    <tr>
+      <td><strong>VOYAGE 3</strong></td>
+      <td>7-8 m³</td>
+      <td>SECONDAIRE</td>
+      <td>Jour J - 17h ou J+1</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-voyage-1---installation-immédiate">🚛 VOYAGE 1 - INSTALLATION IMMÉDIATE</h2>
+<p><strong>Objectif : Pouvoir vivre dès le premier soir</strong></p>
+
+<h3 id="plan-de-chargement-fond--porte">Plan de chargement (FOND → PORTE)</h3>
+
+<h4 id="fond-du-camion-sortir-en-dernier">FOND du camion (sortir en dernier)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons non urgents (série C)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sacs vêtements hors saison</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons livres (lourds = base)</li>
+</ul>
+
+<h4 id="zone-centrale-basse">ZONE CENTRALE BASSE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Réfrigérateur (180×54×56)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>DEBOUT</strong> obligatoire</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sangles arrimage</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cales latérales</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Mini lave-vaisselle (si voyage 1)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Position verticale</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Protection tuyaux</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="zone-centrale-haute">ZONE CENTRALE HAUTE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Matelas adulte
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique protection</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Position verticale côté</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Matelas enfant / Lit SNIGLAR démonté
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pièces regroupées</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Visserie attachée</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="milieu-accès-moyen">MILIEU (accès moyen)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons série B (chambre)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sacs literie complète
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />1 sac par lit étiqueté</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Aspirateur</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons produits ménage</li>
+</ul>
+
+<h4 id="près-porte-sortir-en-premier-">PRÈS PORTE (sortir en premier) ⭐</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Micro-ondes</strong> (27.5×49×40)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton original si possible</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />“FRAGILE” visible</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Carton J-01-A</strong> : Kit cuisine survie</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Carton R-01-A</strong> : Vêtements enfant semaine</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Carton B-01-A</strong> : Vêtements adulte semaine</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Carton W-01-A</strong> : Kit salle de bain</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>2 chaises jardin</strong> (empilées)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Table pliante</strong> ou planche + tréteaux</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Valises personnelles</strong> (2-3)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Caisse outils</strong></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Sac enfant</strong> (jouets, doudou)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Courses alimentaires</strong> (si faites)</li>
+</ul>
+
+<h3 id="sécurisation-chargement">Sécurisation chargement</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sangles à cliquet : 4 points minimum</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Couvertures entre meubles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rien en vrac</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Répartition poids équilibrée</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vérification fermeture sécurisée</li>
+</ul>
+
+<h3 id="check-avant-départ">Check avant départ</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Volume utilisé : ___/12 m³</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Poids estimé OK pour permis B</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Aucun bruit/mouvement test freinage</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rétroviseurs ajustés</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />GPS programmé</li>
+</ul>
+
+<hr />
+
+<h2 id="-voyage-2---gros-mobilier">🚛 VOYAGE 2 - GROS MOBILIER</h2>
+<p><strong>Objectif : Transporter le plus volumineux</strong></p>
+
+<h3 id="plan-de-chargement">Plan de chargement</h3>
+
+<h4 id="fond-stabilité">FOND (stabilité)</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mezzanine démontée</strong> (toutes pièces)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Poutres 220cm le long paroi</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Traverses regroupées</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Échelle à plat dessus</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sachets vis scotchés</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="zone-basse-centrale">ZONE BASSE CENTRALE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Canapé</strong> (120×75×66)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique intégral</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sur chant si possible</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Couvertures protection</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Table marbre</strong> (plateau)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>HYPER FRAGILE</strong></li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vertical entre matelas</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />3 couches protection minimum</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="milieu-hauteur">MILIEU HAUTEUR</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Armoire KLEPPSTAD démontée</strong>
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Panneaux groupés</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Portes protégées (miroir!)</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Kallax 16 démonté</strong>
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Planches par taille</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Panneau arrière protégé</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Kallax 12</strong>
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Monté si place OU démonté</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="zone-haute">ZONE HAUTE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Bureau</strong> (sans pieds)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Plateau protégé</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Peut servir séparation</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Four</strong> (33×57×34)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton original idéal</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>4 chaises</strong> restantes
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Empilées, film plastique</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="près-porte">PRÈS PORTE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Gros cartons série B</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Étagère chrome démontée</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pieds de table (sachet)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons fragiles (vaisselle)</li>
+</ul>
+
+<h3 id="sécurisation-spéciale">Sécurisation spéciale</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Double sangles mezzanine</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cales mousse angles table</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vérification miroirs protégés</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rien au-dessus fragile</li>
+</ul>
+
+<h3 id="check-avant-départ-1">Check avant départ</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Photo chargement (assurance)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test freinage parking</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vitesse réduite virages</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Éviter dos d’âne</li>
+</ul>
+
+<hr />
+
+<h2 id="-voyage-3---finitions">🚛 VOYAGE 3 - FINITIONS</h2>
+<p><strong>Objectif : Reste + non urgent</strong></p>
+
+<h3 id="plan-de-chargement-1">Plan de chargement</h3>
+
+<h4 id="fond-à-milieu">FOND à MILIEU</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Lit Kura démonté</strong></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>SMÅSTAD/PLATSA</strong></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Trofast</strong> (× 2)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Fauteuil Jarpen</strong>
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Protection pieds</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Table basse</strong></li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Étagère chrome</strong> (petite)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Arbre à chat</strong></li>
+</ul>
+
+<h4 id="remplissage">REMPLISSAGE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tous cartons série C</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons décoration</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sacs vêtements reste</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Plantes (dernier moment)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tableau/miroirs</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tapis roulés</li>
+</ul>
+
+<h4 id="près-porte-1">PRÈS PORTE</h4>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Balai, serpillière, seau</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Derniers sacs poubelle</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Produits ménage reste</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons “divers”</li>
+</ul>
+
+<h3 id="dernier-check-ancien-logement">Dernier check ancien logement</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tour complet appartement</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Placards/cave/grenier</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Balcon/terrasse</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Boîte aux lettres</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Compteurs relevés photo</li>
+</ul>
+
+<hr />
+
+<h2 id="-astuces-chargement">📏 ASTUCES CHARGEMENT</h2>
+
+<h3 id="règles-dor">Règles d’or</h3>
+<ol>
+  <li><strong>LOURD en BAS</strong> (stabilité)</li>
+  <li><strong>FRAGILE au MILIEU</strong> (protection)</li>
+  <li><strong>LÉGER en HAUT</strong> (sécurité)</li>
+  <li><strong>URGENT près PORTE</strong> (accès)</li>
+</ol>
+
+<h3 id="optimisation-espace">Optimisation espace</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Utiliser toute la hauteur (1.9m)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Combler vides avec sacs souples</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Matelas = séparateurs verticaux</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tiroirs = rangement petits objets</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Aspirateur = stockage produits dedans</li>
+</ul>
+
+<h3 id="protection">Protection</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique = grouper petits</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Couvertures = entre meubles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cartons = protection sol camion</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Papier bulle = tous fragiles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sangles = tous les 2m</li>
+</ul>
+
+<hr />
+
+<h2 id="️-sécurité-transport">⚠️ SÉCURITÉ TRANSPORT</h2>
+
+<h3 id="limites-légales">Limites légales</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Poids total &lt; 3.5T (permis B)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Charge utile ~1200 kg max</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Hauteur vigilance parking (2.0m)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Dépassement interdit</li>
+</ul>
+
+<h3 id="conduite-adaptée">Conduite adaptée</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Vitesse -20 km/h normale</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Distance freinage × 2</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Virages très lents</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Éviter heures pointe</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pause toutes les heures</li>
+</ul>
+
+<h3 id="équipement-obligatoire">Équipement obligatoire</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Gilet jaune</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Triangle</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Papiers véhicule</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Attestation location</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Assurance à jour</li>
+</ul>
+
+<hr />
+
+<h2 id="-check-list-par-voyage">📋 CHECK-LIST PAR VOYAGE</h2>
+
+<h3 id="voyage-1-">VOYAGE 1 ✓</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Survie installée</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Couchage prêt</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cuisine base OK</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Salle bain fonctionnelle</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mission réussie si</strong> : Famille peut dormir/manger</li>
+</ul>
+
+<h3 id="voyage-2-">VOYAGE 2 ✓</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Gros meubles transportés</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Aucune casse</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Structure mezzanine complète</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mission réussie si</strong> : 80% volume transporté</li>
+</ul>
+
+<h3 id="voyage-3-">VOYAGE 3 ✓</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ancien logement vide</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rien oublié</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clés rendues</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mission réussie si</strong> : 100% déménagé</li>
+</ul>
+
+<hr />
+
+<h2 id="-feuille-de-route">📝 FEUILLE DE ROUTE</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Départ</th>
+      <th>Arrivée</th>
+      <th>Km</th>
+      <th>Cargo principal</th>
+      <th>Incidents</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>h</em></strong></td>
+      <td><strong><em>h</em></strong></td>
+      <td>___</td>
+      <td>Voyage 1 - Survie</td>
+      <td><strong>__</strong>___</td>
+    </tr>
+    <tr>
+      <td><strong><em>h</em></strong></td>
+      <td><strong><em>h</em></strong></td>
+      <td>___</td>
+      <td>Voyage 2 - Meubles</td>
+      <td><strong>__</strong>___</td>
+    </tr>
+    <tr>
+      <td><strong><em>h</em></strong></td>
+      <td><strong><em>h</em></strong></td>
+      <td>___</td>
+      <td>Voyage 3 - Reste</td>
+      <td><strong>__</strong>___</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Km total</strong> : <strong>__</strong>_</td>
+      <td><strong>Essence</strong> : <strong>__</strong>_ €</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-numéros-urgence">🚨 NUMÉROS URGENCE</h2>
+
+<ul>
+  <li><strong>Location camionnette</strong> : <strong>__</strong><strong>__</strong>__</li>
+  <li><strong>Assistance dépannage</strong> : <strong>__</strong><strong>__</strong>__</li>
+  <li><strong>Assurance</strong> : <strong>__</strong><strong>__</strong>__</li>
+  <li><strong>Aide déménagement</strong> : <strong>__</strong><strong>__</strong>__</li>
+</ul>
+
+<hr />
+
+<p><strong>Conducteur principal</strong> : <strong>__</strong><strong>__</strong>_</p>
+
+<p><strong>Conducteur secondaire</strong> : <strong>__</strong><strong>__</strong>_</p>
+
+<p><strong>Date</strong> : <strong>__</strong>_____</p>
+
+</div>
+<script>
+    // navigation
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Fermer le menu lors du clic sur un lien
+    document.querySelectorAll('.nav-menu li a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // checkbox
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.task-list-item input[type="checkbox"]');
+
+        checkboxes.forEach(function (checkbox, index) {
+            // Remove disabled attribute
+            checkbox.removeAttribute('disabled');
+
+            // Create unique key based on page path and index
+            const pageKey = window.location.pathname;
+            const storageKey = `${pageKey}-checkbox-${index}`;
+
+            // Restore state from localStorage
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+
+            // Save state on change
+            checkbox.addEventListener('change', function () {
+                localStorage.setItem(storageKey, this.checked);
+            });
+        });
+    });
+
+
+    // Fonction pour calculer et afficher la progression
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+        const percentage = Math.round((checked.length / checkboxes.length) * 100);
+
+        // Créer ou mettre à jour la barre de progression
+        let progressBar = document.getElementById('main-progress');
+        if (!progressBar) {
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            progressContainer.style.position = 'fixed';
+            progressContainer.style.top = '10px';
+            progressContainer.style.right = '10px';
+            progressContainer.style.width = '200px';
+            progressContainer.style.zIndex = '1000';
+            progressContainer.innerHTML = '<div id="main-progress" class="progress-bar">0%</div>';
+            document.body.appendChild(progressContainer);
+            progressBar = document.getElementById('main-progress');
+        }
+
+        progressBar.style.width = percentage + '%';
+        progressBar.textContent = percentage + '%';
+
+        // Sauvegarder en localStorage
+        localStorage.setItem('moving-progress', JSON.stringify({
+            checked: Array.from(checked).map(cb => cb.closest('.checklist-item')?.querySelector('.item-name')?.textContent),
+            percentage: percentage
+        }));
+    }
+
+    // Ajouter l'événement à toutes les checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateProgress);
+    });
+
+    // Restaurer l'état précédent si existant
+    const savedProgress = localStorage.getItem('moving-progress');
+    if (savedProgress) {
+        const data = JSON.parse(savedProgress);
+        // Restauration simple - pourrait être améliorée
+        console.log(`Progression sauvegardée : ${data.percentage}%`);
+    }
+
+    function resetForm() {
+        document.getElementById('formlist').reset();
+    }
+
+    // Initialiser la progression
+    updateProgress();
+</script>
+</body>
+</html>

@@ -1,0 +1,908 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Inventaire</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #34495e;
+            background: linear-gradient(to right, #e8f5e9, #fff);
+            padding: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #4caf50;
+            border-radius: 5px;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-menu li {
+            text-transform: lowercase;
+
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-menu li a:hover {
+            color: #3498db;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .critical-box {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .survival-box {
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .checklist-item {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border-left: 4px solid #e0e0e0;
+        }
+
+        .checklist-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left-color: #3498db;
+        }
+
+        .checklist-item.priority-high {
+            border-left-color: #e74c3c;
+            background: #fee;
+        }
+
+        .checklist-item.priority-medium {
+            border-left-color: #f39c12;
+            background: #fffbf0;
+        }
+
+        .checklist-item.priority-low {
+            border-left-color: #95a5a6;
+        }
+
+        input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .item-info {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-urgent {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge-fragile {
+            background: #e67e22;
+            color: white;
+        }
+
+        .badge-heavy {
+            background: #34495e;
+            color: white;
+        }
+
+        .badge-tools {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .badge-voyage {
+            background: #3498db;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .truck-info {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .truck-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .spec-card {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .spec-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .spec-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3498db;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .progress-container {
+            background: #ecf0f1;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            height: 30px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: absolute;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: #2c3e50;
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .truck-specs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <div class="logo">TaR25</div>
+        <ul class="nav-menu">
+            <li><a href="/tar/">Accueil</a></li>
+            <li><a href="/tar/checklist">INVENTAIRE MOBILIER</a></li>
+            <li><a href="/tar/survivalkit">KIT DE SURVIE</a></li>
+            <li><a href="/tar/camion">CAMION</a></li>
+            <li><a href="/tar/demontage">DÉMONTAGE/REMONTAGE</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+<button type="reset" onclick="resetForm()"> Reset</button>
+
+<div id="formlist">
+
+    <h1 id="-inventaire-mobilier---déménagement-tar">📦 INVENTAIRE MOBILIER - DÉMÉNAGEMENT TAR</h1>
+<p><strong>Appartement T3 - 65,56 m²</strong> | Date: <strong>__</strong>_____</p>
+
+<hr />
+
+<h2 id="-récapitulatif">📊 RÉCAPITULATIF</h2>
+<ul>
+  <li><strong>Total meubles</strong>: 41 pièces</li>
+  <li><strong>Voyages camionnette estimés</strong>: 2-3</li>
+  <li><strong>Volume total estimé</strong>: ~30 m³</li>
+</ul>
+
+<hr />
+
+<h2 id="-chambre-1---enfant-1158-m">✅ CHAMBRE 1 - ENFANT (11,58 m²)</h2>
+
+<h3 id="mobilier-principal">Mobilier principal</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Lit Kura mezzanine IKEA</strong>
+    <ul>
+      <li>Dimensions: H116 × L209 × P99 cm</li>
+      <li>⚠️ À DÉMONTER - Temps: 1h + 1h30</li>
+      <li>📦 Carton vis: R-LIT-01</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>SMÅSTAD/PLATSA</strong>
+    <ul>
+      <li>Dimensions: H140 × L105 × P37 cm</li>
+      <li>📦 Modulaire - Noter configuration</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Armoire penderie KLEPPSTAD</strong>
+    <ul>
+      <li>Dimensions: H176 × L118 × P55 cm</li>
+      <li>⚠️ À DÉMONTER - Temps: 45min + 1h</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Kallax 12 cubes</strong>
+    <ul>
+      <li>Dimensions: H147 × L112 × P39 cm</li>
+      <li>📦 Peut rester monté si place</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Bureau écolier vintage</strong>
+    <ul>
+      <li>📦 Protéger le plateau</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Trofast étagère escalier</strong>
+    <ul>
+      <li>Dimensions: H95 × L99 × P44 cm</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Trofast étagère simple</strong>
+    <ul>
+      <li>Dimensions: H94 × L46 × P30 cm</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Lit bébé SNIGLAR</strong> (transformable canapé)
+    <ul>
+      <li>Dimensions: H80 × L124 × P66 cm</li>
+      <li>💡 Option: transformer en canapé 110cm</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="cartons-chambre-enfant">Cartons chambre enfant</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton R-01-A: Vêtements semaine 1</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton R-02-A: Doudou + jouets favoris</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton R-03-B: Livres</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton R-04-B: Jouets secondaires</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton R-05-C: Vêtements hors saison</li>
+</ul>
+
+<hr />
+
+<h2 id="-chambre-2---adulte-1274-m">✅ CHAMBRE 2 - ADULTE (12,74 m²)</h2>
+
+<h3 id="configuration-a---sans-mezzanine-recommandé">Configuration A - Sans mezzanine (RECOMMANDÉ)</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Lit double standard</strong> (à acheter/récupérer)
+    <ul>
+      <li>Dimensions suggérées: 160×200 cm</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="configuration-b---avec-mezzanine">Configuration B - Avec mezzanine</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mezzanine 2 places</strong>
+    <ul>
+      <li>Dimensions: H160 × L220 × P220 cm</li>
+      <li>⚠️ À DÉMONTER OBLIGATOIRE - Temps: 2h + 3h</li>
+      <li>⚠️ Vérifier hauteur plafond min. 2,60m</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="rangements">Rangements</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Kallax 16 cubes</strong>
+    <ul>
+      <li>Dimensions: H147 × L147 × P39 cm</li>
+      <li>⚠️ À DÉMONTER - Très lourd</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Bureau ajustable</strong>
+    <ul>
+      <li>Dimensions: H75-100 × L81 × P50 cm</li>
+      <li>📦 Démonter pieds uniquement</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Armoire métallique gris PS</strong>
+    <ul>
+      <li>Dimensions: H104 × L60 × P40 cm</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Structure penderie Cotonnade</strong>
+    <ul>
+      <li>Dimensions: H150 × L110 × P50 cm</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="cartons-chambre-adulte">Cartons chambre adulte</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton B-01-A: Vêtements semaine 1</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton B-02-A: Documents importants</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton B-03-B: Vêtements courants</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton B-04-C: Vêtements hors saison</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton B-05-C: Accessoires</li>
+</ul>
+
+<hr />
+
+<h2 id="-séjour-cuisine-2535-m">✅ SÉJOUR-CUISINE (25,35 m²)</h2>
+
+<h3 id="zone-cuisine">Zone Cuisine</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Réfrigérateur</strong>
+    <ul>
+      <li>Dimensions: H180 × L54 × P56 cm</li>
+      <li>🚛 Voyage 1 si possible</li>
+      <li>⚠️ Débrancher 24h avant</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Four encastrable</strong>
+    <ul>
+      <li>Dimensions: H33 × L57 × P34 cm</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Micro-ondes</strong>
+    <ul>
+      <li>Dimensions: H27.5 × L49 × P39.7 cm</li>
+      <li>🚛 Voyage 1 - PRIORITÉ</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mini lave-vaisselle</strong>
+    <ul>
+      <li>Format compact</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Table marbre ovale</strong>
+    <ul>
+      <li>Dimensions: H72 × L120 × P60 cm</li>
+      <li>⚠️ FRAGILE - Emballer plateau</li>
+      <li>📦 Démonter pieds</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Chaises jardin × 6</strong>
+    <ul>
+      <li>Dimensions: H89 × L49 × P49 cm (chaque)</li>
+      <li>📦 Empilables</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="zone-séjour">Zone Séjour</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Mezzanine 220×220</strong> (OPTION SÉJOUR ⭐)
+    <ul>
+      <li>💡 Recommandé pour coin TV cocooning</li>
+      <li>⚠️ Si placée ici, vérifier hauteur 2,60m min</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Canapé</strong>
+    <ul>
+      <li>Dimensions: H53-66 × L120 × P73-75 cm</li>
+      <li>📦 Film plastique pour protection</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Table basse modulable</strong>
+    <ul>
+      <li>Dimensions: H44-58 × L80 × P40 cm</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Fauteuil Jarpen/SKÅLBOD</strong>
+    <ul>
+      <li>Dimensions: H71 × L64 × P69 cm</li>
+      <li>💎 Pièce vintage - Bien protéger</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Étagère chrome Niels G. (grande)</strong>
+    <ul>
+      <li>Dimensions: H195 × L111 × P40 cm</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Arbre à chat</strong>
+    <ul>
+      <li>Dimensions: H86 × L66 × P40 cm</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="cartons-cuisine">Cartons cuisine</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton J-01-A: Kit survie cuisine (assiettes, couverts base)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton J-02-A: Casseroles, poêles essentielles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton J-03-B: Vaisselle quotidienne</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton J-04-B: Électroménager petit</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton J-05-C: Vaisselle occasion</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton J-06-C: Ustensiles secondaires</li>
+</ul>
+
+<h3 id="cartons-séjour">Cartons séjour</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton V-01-B: Déco fragile</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton V-02-B: Livres, magazines</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton V-03-C: DVD, jeux</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton V-04-C: Déco murale</li>
+</ul>
+
+<hr />
+
+<h2 id="-salle-de-bains-435-m">✅ SALLE DE BAINS (4,35 m²)</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Étagère chrome Niels G. (petite)</strong>
+    <ul>
+      <li>Dimensions: H90 × L111 × P40 cm</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="cartons-salle-de-bains">Cartons salle de bains</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton W-01-A: Kit urgence (serviettes, produits base)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton W-02-B: Produits beauté</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Carton W-03-C: Stock produits</li>
+</ul>
+
+<hr />
+
+<h2 id="-entrée-533-m">✅ ENTRÉE (5,33 m²)</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Meuble escalier vintage</strong>
+    <ul>
+      <li>Dimensions: H95 × L44 × P99 cm</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-meubles-non-attribués--réserve">✅ MEUBLES NON ATTRIBUÉS / RÉSERVE</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>Kallax 8 cubes</strong>
+    <ul>
+      <li>Dimensions: H147 × L77 × P39 cm</li>
+      <li>📦 Option: vendre/donner?</li>
+    </ul>
+  </li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>La Kura mezzanine</strong> (2ème?)
+    <ul>
+      <li>Dimensions: H116 × L206 × P99 cm</li>
+      <li>📦 Option: vendre/donner?</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-matériel-déménagement">📋 MATÉRIEL DÉMÉNAGEMENT</h2>
+
+<h3 id="emballage">Emballage</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />30-40 cartons standard</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />10 cartons livres (renforcés)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Papier bulle (50m)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Papier journal</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />5 rouleaux scotch large</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Marqueurs indélébiles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Étiquettes couleur</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sacs poubelle 100L</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Film plastique étirable</li>
+</ul>
+
+<h3 id="outils-nécessaires">Outils nécessaires</h3>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Tournevis plat + cruciforme</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clés Allen IKEA</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Clé de 13 (mezzanine)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Visseuse + embouts</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Marteau</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Pince</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Cutter</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Mètre</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sangles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Diable</li>
+</ul>
+
+<hr />
+
+<h2 id="-notes-importantes">📝 NOTES IMPORTANTES</h2>
+
+<p><strong>Code couleur cartons:</strong></p>
+<ul>
+  <li>⚪ blanc = Mo</li>
+  <li>🟠 orange = daronnerie</li>
+  <li>🟠 orange = bureau</li>
+  <li>🔵 Bleu = Salle de bain</li>
+  <li>🟡 Jaune = Séjour</li>
+  <li>🟢 Vert = Cuisine</li>
+  <li>🟡 Jaune = Cuisine</li>
+  <li>⚪ Blanc =</li>
+  <li>⚫ Noir = Entrée/Divers</li>
+</ul>
+
+<p><strong>Priorité cartons:</strong></p>
+<ul>
+  <li>A = Ouvrir immédiatement</li>
+  <li>B = Semaine 1</li>
+  <li>C = Peut attendre</li>
+</ul>
+
+<p><strong>Rappel volumes camionnette:</strong></p>
+<ul>
+  <li>Capacité: 11-12 m³</li>
+  <li>Voyage 1: Survie + urgent</li>
+  <li>Voyage 2: Gros mobilier</li>
+  <li>Voyage 3: Reste + finitions</li>
+</ul>
+
+<hr />
+
+<p><strong>Signatures:</strong></p>
+
+<p>Responsable déménagement: <strong>__</strong><strong>__</strong><strong>_ Date: __</strong><strong>__</strong>_</p>
+
+<p>Aide 1: <strong>__</strong><strong>__</strong>___</p>
+
+<p>Aide 2: <strong>__</strong><strong>__</strong>___</p>
+
+</div>
+<script>
+    // navigation
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Fermer le menu lors du clic sur un lien
+    document.querySelectorAll('.nav-menu li a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // checkbox
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.task-list-item input[type="checkbox"]');
+
+        checkboxes.forEach(function (checkbox, index) {
+            // Remove disabled attribute
+            checkbox.removeAttribute('disabled');
+
+            // Create unique key based on page path and index
+            const pageKey = window.location.pathname;
+            const storageKey = `${pageKey}-checkbox-${index}`;
+
+            // Restore state from localStorage
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+
+            // Save state on change
+            checkbox.addEventListener('change', function () {
+                localStorage.setItem(storageKey, this.checked);
+            });
+        });
+    });
+
+
+    // Fonction pour calculer et afficher la progression
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+        const percentage = Math.round((checked.length / checkboxes.length) * 100);
+
+        // Créer ou mettre à jour la barre de progression
+        let progressBar = document.getElementById('main-progress');
+        if (!progressBar) {
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            progressContainer.style.position = 'fixed';
+            progressContainer.style.top = '10px';
+            progressContainer.style.right = '10px';
+            progressContainer.style.width = '200px';
+            progressContainer.style.zIndex = '1000';
+            progressContainer.innerHTML = '<div id="main-progress" class="progress-bar">0%</div>';
+            document.body.appendChild(progressContainer);
+            progressBar = document.getElementById('main-progress');
+        }
+
+        progressBar.style.width = percentage + '%';
+        progressBar.textContent = percentage + '%';
+
+        // Sauvegarder en localStorage
+        localStorage.setItem('moving-progress', JSON.stringify({
+            checked: Array.from(checked).map(cb => cb.closest('.checklist-item')?.querySelector('.item-name')?.textContent),
+            percentage: percentage
+        }));
+    }
+
+    // Ajouter l'événement à toutes les checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', updateProgress);
+    });
+
+    // Restaurer l'état précédent si existant
+    const savedProgress = localStorage.getItem('moving-progress');
+    if (savedProgress) {
+        const data = JSON.parse(savedProgress);
+        // Restauration simple - pourrait être améliorée
+        console.log(`Progression sauvegardée : ${data.percentage}%`);
+    }
+
+    function resetForm() {
+        document.getElementById('formlist').reset();
+    }
+
+    // Initialiser la progression
+    updateProgress();
+</script>
+</body>
+</html>
